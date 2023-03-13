@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using JWT.Data.JWT;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JWT.Controllers
@@ -39,6 +40,18 @@ namespace JWT.Controllers
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             return await _authServies.ForgetPassword(userModel);
+        }
+        [HttpGet]
+        [Route("RefreshToken")]
+        public async Task<ActionResult<AuthModel>> RefreshToken(string token)
+        {
+           return await _authServies.RefreshToken(token);
+        }
+        [HttpGet]
+        [Route("RevokeToken")]
+        public async Task<bool> RevokeToken(string token)
+        {
+            return await _authServies.RevokeToken(token);
         }
     }
 }

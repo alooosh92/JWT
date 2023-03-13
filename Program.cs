@@ -1,16 +1,11 @@
-global using JWT.Data;
-global using Microsoft.AspNetCore.Authentication.JwtBearer;
-global using Microsoft.AspNetCore.Identity;
-global using Microsoft.EntityFrameworkCore;
-global using Microsoft.IdentityModel.Tokens;
-global using System.Text;
-global using JWT.Data.JWT;
-global using Microsoft.AspNetCore.Mvc;
-global using System.IdentityModel.Tokens.Jwt;
-global using System.Security.Claims;
-global using Microsoft.AspNetCore.Identity.UI.Services;
-global using System.ComponentModel.DataAnnotations;
-global using System.ComponentModel;
+ using JWT.Data;
+ using Microsoft.AspNetCore.Authentication.JwtBearer;
+ using Microsoft.AspNetCore.Identity;
+ using Microsoft.EntityFrameworkCore;
+ using Microsoft.IdentityModel.Tokens;
+ using System.Text;
+ using JWT.Data.JWT;
+ using Microsoft.AspNetCore.Identity.UI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
