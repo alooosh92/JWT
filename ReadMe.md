@@ -5,3 +5,4 @@
 ### نسخ المجلد كاملا مع تغيير الفضاء Data/JWT
 ### لحماية الكنترول من الدخول غير المصرح نضع  [Authorize(AuthenticationSchemes = "Bearer")]
 ### كما يمكن اضافة الصلاحيات مثال [Authorize(AuthenticationSchemes = "Bearer",Roles = "User")]
+### يجب اضافة جدول refreshToken to applicationDbContex
