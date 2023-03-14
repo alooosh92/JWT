@@ -118,22 +118,7 @@ namespace JWT.Data.JWT
                 RefreshToken = refreshToken.Token,
                 RefreshTokenExpireson = refreshToken.Expirson
             };
-          /*
-           if (await _db.RefreshTokens!.AnyAsync(t =>t.UserId == user.Id && t.IsActive)) 
-            {
-                var activeRefreshToken = await _db.RefreshTokens!.SingleOrDefaultAsync(t => t.UserId == user.Id && t.IsActive);
-                rutToken.RefreshToken = activeRefreshToken!.Token;
-                rutToken.RefreshTokenExpireson = activeRefreshToken.Expirson;
-            }else
-            {
-                var refrehsToken = GeneraterRefreshToken(user.Id);
-                rutToken.RefreshToken = refrehsToken.Token;
-                rutToken.RefreshTokenExpireson = refrehsToken.Expirson;               
-                await _db.RefreshTokens!.AddAsync(refrehsToken);
-                await _userManager.UpdateAsync(user);
-            }*/
             return rutToken;
-
         }
         public async Task<ActionResult<AuthModel>> ChangePassword(UserModelPassword userModel)
         {
@@ -142,17 +127,17 @@ namespace JWT.Data.JWT
             var res = await _userManager.ChangePasswordAsync(user,
                 userModel.OldPassword!, userModel.NewPassword!);
             if (!res.Succeeded) return new AuthModel { Message = "something is Error" };
-            return new AuthModel { Message = "Succeeded Change Password" };
+            return await Login(new UserModel { UserName = userModel.UserName,Password=userModel.NewPassword});
         }
-        public async Task<ActionResult<AuthModel>> ForgetPassword(UserModel userModel)
+        public async Task<ActionResult<bool>> ForgetPassword(string username)
         {
-            if (userModel.UserName == null) return new AuthModel { Message = "Email is null" };
-            var user = await _userManager.FindByEmailAsync(userModel.UserName);
-            if (user == null) return new AuthModel { Message = "User not find" };
+            if (username == null) return false;
+            var user = await _userManager.FindByEmailAsync(username);
+            if (user == null) return false;
             var newPass = Guid.NewGuid().ToString().Substring(0, 8);
             var rest = await _userManager.ResetPasswordAsync(user, await _userManager.GeneratePasswordResetTokenAsync(user), newPass);
-            if (rest.Succeeded) await _emailSender.SendEmailAsync(userModel.UserName!, "Rest password", $"كلمة السر الجديدة: {newPass}");
-            return new AuthModel { Message = "Password reset plase check email" };
+            if (rest.Succeeded) await _emailSender.SendEmailAsync(username!, "Rest password", $"كلمة السر الجديدة: {newPass}");
+            return true;
         }
         public async Task<ActionResult<AuthModel>> RefreshToken(string token)
         {
@@ -175,6 +160,7 @@ namespace JWT.Data.JWT
             await _db.SaveChangesAsync();
             var user = await _userManager.FindByIdAsync(tok.UserId!);
             var jwtToken = await CreateJwtSecurityToken(user!);
+            authModel.Message = "Every thing is ok";
             authModel.IsAuthanticated = true;
             authModel.Token = new JwtSecurityTokenHandler().WriteToken(jwtToken);
             authModel.Email = user!.Email;

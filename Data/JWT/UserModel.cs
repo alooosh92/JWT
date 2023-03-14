@@ -11,8 +11,5 @@ namespace JWT.Data.JWT
         [Required]
         [MinLength(6)]
         public string? Password { get; set; }
-        [Required]
-        [DefaultValue("User")]
-         public string? Role { get; set; }
     }
 }

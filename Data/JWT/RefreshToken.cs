@@ -18,8 +18,5 @@ namespace JWT.Data.JWT
         public DateTime? CreatedOn { get; set; }
         [AllowNull]
         public DateTime? RevokedON { get; set; }
-        // public bool IsActive => RevokedON == null && !IsExpired;
-        //  public bool IsExpired => DateTime.UtcNow >= Expirson;
-        // RevokedON == null && DateTime.UtcNow >= Expirson
     }
 }
