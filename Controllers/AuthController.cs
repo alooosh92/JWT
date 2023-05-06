@@ -1,4 +1,5 @@
 ﻿using JWT.Data.JWT;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JWT.Controllers
@@ -33,24 +34,31 @@ namespace JWT.Controllers
             if (!ModelState.IsValid) return BadRequest(ModelState);
             return await _authServies.ChangePassword(userModel);
         }
-        [HttpGet]
+        [HttpPost]
         [Route("ForgetPassword")]
-        public async Task<ActionResult<bool>> ForgetPassword(string username)
+        public async Task<ActionResult<bool>> ForgetPassword([FromBody] string username)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             return await _authServies.ForgetPassword(username);
         }
-        [HttpGet]
+        [HttpPost]
         [Route("RefreshToken")]
-        public async Task<ActionResult<AuthModel>> RefreshToken(string token)
+        public async Task<ActionResult<AuthModel>> RefreshToken([FromBody] string refToken)
         {
-           return await _authServies.RefreshToken(token);
+           return await _authServies.RefreshToken(refToken);
         }
-        [HttpGet]
+        [HttpPost]
         [Route("RevokeToken")]
-        public async Task<bool> RevokeToken(string token)
+        public async Task<bool> RevokeToken([FromBody] string token)
         {
             return await _authServies.RevokeToken(token);
+        }
+        [HttpGet]
+        [Route("CheckToken")]
+        [Authorize(AuthenticationSchemes = "Bearer")]
+        public bool CheckToken()
+        {
+            return true;
         }
     }
 }
